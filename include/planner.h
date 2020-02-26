@@ -9,6 +9,7 @@
 #include <tf/transform_listener.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <nav_core/base_global_planner.h>
 
 #include "constants.h"
 #include "helper.h"
@@ -28,16 +29,16 @@ namespace HybridAStar {
     It inherits from `ros::nav_core::BaseGlobalPlanner` so that it can easily be used with the ROS navigation stack
    \todo make it actually inherit from nav_core::BaseGlobalPlanner
 */
-class Planner {
+class APlanner : public nav_core::BaseGlobalPlanner {
  public:
   /// The default constructor
-  Planner();
+  APlanner();
 
   /*!
      \brief Initializes the collision as well as heuristic lookup table
      \todo probably removed
   */
-  void initializeLookups();
+  void initialize(std::string name, costmap_2d::Costmap2DROS* costmap_ros);
 
   /*!
      \brief Sets the map e.g. through a callback from a subscriber listening to map updates.
@@ -61,6 +62,8 @@ class Planner {
      \brief The central function entry point making the necessary preparations to start the planning.
   */
   void plan();
+
+  bool makePlan(const geometry_msgs::PoseStamped& start, const geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& plan);
 
  private:
   /// The node handle

@@ -1,10 +1,14 @@
 #include "planner.h"
+#include <pluginlib/class_list_macros.h>
+
+//register this planner as a BaseGlobalPlanner plugin
+PLUGINLIB_EXPORT_CLASS(HybridAStar::APlanner, nav_core::BaseGlobalPlanner)
 
 using namespace HybridAStar;
 //###################################################
 //                                        CONSTRUCTOR
 //###################################################
-Planner::Planner() {
+APlanner::APlanner() {
   // _____
   // TODOS
   //    initializeLookups();
@@ -19,19 +23,19 @@ Planner::Planner() {
   // ___________________
   // TOPICS TO SUBSCRIBE
   if (Constants::manual) {
-    subMap = n.subscribe("/map", 1, &Planner::setMap, this);
+    subMap = n.subscribe("/map", 1, &APlanner::setMap, this);
   } else {
-    subMap = n.subscribe("/occ_map", 1, &Planner::setMap, this);
+    subMap = n.subscribe("/occ_map", 1, &APlanner::setMap, this);
   }
 
-  subGoal = n.subscribe("/move_base_simple/goal", 1, &Planner::setGoal, this);
-  subStart = n.subscribe("/initialpose", 1, &Planner::setStart, this);
+  subGoal = n.subscribe("/move_base_simple/goal", 1, &APlanner::setGoal, this);
+  subStart = n.subscribe("/initialpose", 1, &APlanner::setStart, this);
 };
 
 //###################################################
 //                                       LOOKUPTABLES
 //###################################################
-void Planner::initializeLookups() {
+void APlanner::initialize() {
   if (Constants::dubinsLookup) {
     Lookup::dubinsLookup(dubinsLookup);
   }
@@ -42,7 +46,7 @@ void Planner::initializeLookups() {
 //###################################################
 //                                                MAP
 //###################################################
-void Planner::setMap(const nav_msgs::OccupancyGrid::Ptr map) {
+void APlanner::setMap(const nav_msgs::OccupancyGrid::Ptr map) {
   if (Constants::coutDEBUG) {
     std::cout << "I am seeing the map..." << std::endl;
   }
@@ -97,7 +101,7 @@ void Planner::setMap(const nav_msgs::OccupancyGrid::Ptr map) {
 //###################################################
 //                                   INITIALIZE START
 //###################################################
-void Planner::setStart(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& initial) {
+void APlanner::setStart(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& initial) {
   float x = initial->pose.pose.position.x / Constants::cellSize;
   float y = initial->pose.pose.position.y / Constants::cellSize;
   float t = tf::getYaw(initial->pose.pose.orientation);
@@ -126,7 +130,7 @@ void Planner::setStart(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr&
 //###################################################
 //                                    INITIALIZE GOAL
 //###################################################
-void Planner::setGoal(const geometry_msgs::PoseStamped::ConstPtr& end) {
+void APlanner::setGoal(const geometry_msgs::PoseStamped::ConstPtr& end) {
   // retrieving goal position
   float x = end->pose.position.x / Constants::cellSize;
   float y = end->pose.position.y / Constants::cellSize;
@@ -148,7 +152,7 @@ void Planner::setGoal(const geometry_msgs::PoseStamped::ConstPtr& end) {
 //###################################################
 //                                      PLAN THE PATH
 //###################################################
-void Planner::plan() {
+void APlanner::plan() {
   // if a start as well as goal are defined go ahead and plan
   if (validStart && validGoal) {
 
@@ -230,4 +234,9 @@ void Planner::plan() {
   } else {
     std::cout << "missing goal or start" << std::endl;
   }
+}
+
+bool APlanner::makePlan(){
+  plan();
+  return true;
 }

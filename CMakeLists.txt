@@ -86,3 +86,5 @@ install(TARGETS ${PROJECT_NAME} tf_broadcaster
 install(DIRECTORY launch/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
     )
+
+ add_library(global_planner_lib src/planner.cpp)
