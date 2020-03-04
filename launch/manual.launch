@@ -1,7 +1,17 @@
 <launch>
+<param name="/use_sim_time" value="1"/>
+<!-- https://answers.ros.org/question/12169/roscpp-using-simulated-time/ -->
  <!-- Turn on hybrid_astar node -->
- <node name="hybrid_astar" pkg="hybrid_astar" type="hybrid_astar" /> 
- <node name="tf_broadcaster" pkg="hybrid_astar" type="tf_broadcaster" />
+ <node name="hybrid_astar" pkg="hybrid_astar" type="hybrid_astar" >  -->
+    <!-- <remap from="/initialpose" to="/pose_estimate" />
+    <remap from="/move_base_simple/goal" to="/rviz/goal"/> -->
+</node>
+ <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0.0 0.0 0.0 0 0 0.0 /map /odom 100"/>
+<node pkg="tf" type="static_transform_publisher" name="map_to_utm" args="0.0 0.0 0.0 0 0 0.0 /map /path 100"/>
+ <!-- <node name="tf_broadcaster" pkg="hybrid_astar" type="tf_broadcaster" /> -->
  <node name="map_server" pkg="map_server" type="map_server" args="$(find hybrid_astar)/maps/map.yaml" />
- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hybrid_astar)/launch/config.rviz" />
+ <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hybrid_astar)/launch/config.rviz">
+    <!-- <remap from="/initialpose" to="/pose_estimate" />
+    <remap from="move_base_simple/goal" to="rviz/goal"/> -->
+ </node>
 </launch>
