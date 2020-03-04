@@ -28,7 +28,7 @@ class Path {
     std::string pathVehicleTopic = "/pathVehicle";
 
     if (smoothed) {
-      pathTopic = "/sPath";
+      pathTopic = "/hybrid_astar/goalPath";
       pathNodesTopic = "/sPathNodes";
       pathVehicleTopic = "/sPathVehicle";
       this->smoothed = smoothed;
