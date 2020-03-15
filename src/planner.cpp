@@ -24,7 +24,7 @@ Planner::Planner() {
     subMap = n.subscribe("/occ_map", 1, &Planner::setMap, this);
   }
 
-  subGoal = n.subscribe("/rviz/goal", 1, &Planner::setGoal, this);
+  subGoal = n.subscribe("/goalpose", 1, &Planner::setGoal, this);
   subStart = n.subscribe("/pose_estimate", 1, &Planner::setStart, this);
 };
 
