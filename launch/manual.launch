@@ -2,7 +2,7 @@
 <param name="use_sim_time" value="1"/>
 <!-- https://answers.ros.org/question/12169/roscpp-using-simulated-time/ -->
  <!-- Turn on hybrid_astar node -->
- <node name="hybrid_astar" pkg="hybrid_astar" type="hybrid_astar" >  -->
+ <node name="hybrid_astar" pkg="hybrid_astar" type="hybrid_astar" launch-prefix="xterm -e gdb --args">  
     <!-- <remap from="/initialpose" to="/pose_estimate" />
     <remap from="/move_base_simple/goal" to="/rviz/goal"/> -->
 </node>
