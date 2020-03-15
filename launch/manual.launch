@@ -23,6 +23,17 @@
     </node>
  <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0.0 0.0 0.0 0 0 0.0 /map /odom 100"/>
 <node pkg="tf" type="static_transform_publisher" name="map_to_utm" args="0.0 0.0 0.0 0 0 0.0 /map /path 100"/>
+ <!-- ****** Fake localization for map and gps ***** -->
+<node name="odom_to_pose_estimate" pkg="lawn_tractor_navigation" type="odom_to_pose_estimate.py" output="screen" />
+<node pkg="tf" type="static_transform_publisher" name="map_to_path" args="0.0 0.0 0.0 0 0 0.0 /map /path 100"/>
+<node pkg="lawn_tractor_sim" type="odom_to_lla.py" name="odom_to_lla" output="screen"/>
+
+ <!-- <node name="map_server" pkg="map_server" type="map_server"
+		 args="$(find lawn_tractor_sim)/maps/farm.yaml" output="screen">
+  <param name="/use_sim_time" value="1"/> 
+  https://answers.ros.org/question/12169/roscpp-using-simulated-time/
+	<param name="frame_id" value="map"/>
+</node> -->
  <!-- <node name="tf_broadcaster" pkg="hybrid_astar" type="tf_broadcaster" /> -->
  <node name="map_server" pkg="map_server" type="map_server" args="$(find hybrid_astar)/maps/map.yaml" />
  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hybrid_astar)/launch/config.rviz">
