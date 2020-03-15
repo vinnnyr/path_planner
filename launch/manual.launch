@@ -6,6 +6,21 @@
     <!-- <remap from="/initialpose" to="/pose_estimate" />
     <remap from="/move_base_simple/goal" to="/rviz/goal"/> -->
 </node>
+<node pkg="stage_ros" type="stageros" name="stageros"
+	 args="-g runs headless $(find lawn_tractor_sim)/stage/farm.world">
+	 <remap from="base_scan" to="scan"/>
+</node>
+<!-- ************** Robot Description *************** -->
+    <!-- robot_description is used by nodes that publish to joint_states. -->
+    <param name="robot_description"
+           command="$(find xacro)/xacro --inorder $(find lawn_tractor_sim)/urdf/lawn_tractor.urdf.xacro"/>
+
+    <!-- Read joint positions from joint_states, then publish the vehicle's
+         state to tf. -->
+    <node name="vehicle_state_publisher" pkg="robot_state_publisher"
+          type="robot_state_publisher">
+      <param name="publish_frequency" value="30.0"/>
+    </node>
  <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0.0 0.0 0.0 0 0 0.0 /map /odom 100"/>
 <node pkg="tf" type="static_transform_publisher" name="map_to_utm" args="0.0 0.0 0.0 0 0 0.0 /map /path 100"/>
  <!-- <node name="tf_broadcaster" pkg="hybrid_astar" type="tf_broadcaster" /> -->
